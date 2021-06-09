@@ -12,7 +12,9 @@
 
  .PARAMETER BuildRegistry
     The name of the source registry where development image is present.
-
+ .PARAMETER BuildNamespace
+    The namespace in the build registry (Optional).
+ 
  .PARAMETER BuildSubscription
     The subscription where the build registry is located
 
@@ -42,6 +44,7 @@
 Param(
     [string] $BuildRegistry = "industrialiot",
     [string] $BuildSubscription = "IOT_GERMANY",
+    [string] $BuildNamespace = $null,
     [string] $ReleaseRegistry = "industrialiotprod",
     [string] $ReleaseSubscription = "IOT_GERMANY",
     [string] $ResourceGroupName = $null,
@@ -129,6 +132,11 @@ $BuildRepositories = $result | ConvertFrom-Json
 $jobs = @()
 foreach ($Repository in $BuildRepositories) {
 
+    if ((![string]::IsNullOrEmpty($script:BuildNamespace)) -and 
+        (!($Repository -like "$($script:BuildNamespace)/"))) {
+        Write-Host "Skip $Repository..."
+        return
+    }
     $BuildTag = "$($Repository):$($script:ReleaseVersion)"
 
     # see if build tag exists
@@ -155,7 +163,7 @@ foreach ($Repository in $BuildRepositories) {
     }
 
     # Example: if release version is 2.8.1, then base image tags are "2", "2.8", "2.8.1"
-    $versionParts = $script:ReleaseVersion.Split('.')
+    $versionParts = $script:ReleaseVersion.Split('-')[0].Split('.')
     if ($versionParts.Count -gt 0) {
         $versionTag = $versionParts[0]
         if ($script:IsMajorUpdate.IsPresent -or $script:IsLatest.IsPresent) {
