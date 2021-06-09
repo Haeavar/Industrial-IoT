@@ -133,9 +133,9 @@ $jobs = @()
 foreach ($Repository in $BuildRepositories) {
 
     if ((![string]::IsNullOrEmpty($script:BuildNamespace)) -and 
-        (!($Repository -like "$($script:BuildNamespace)/"))) {
+        (!$Repository.StartsWith($script:BuildNamespace))) {
         Write-Host "Skip $Repository..."
-        return
+        continue
     }
     $BuildTag = "$($Repository):$($script:ReleaseVersion)"
 
