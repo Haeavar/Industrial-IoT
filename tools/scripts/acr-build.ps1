@@ -91,7 +91,7 @@ else {
 }
 
 if ([string]::IsNullOrEmpty($Registry)) {
-    $Registry = $env.BUILD_REGISTRY
+    $Registry = $env:BUILD_REGISTRY
     if ([string]::IsNullOrEmpty($Registry)) {
         # Feature builds by default into dev registry
         $Registry = "industrialiotdev"
