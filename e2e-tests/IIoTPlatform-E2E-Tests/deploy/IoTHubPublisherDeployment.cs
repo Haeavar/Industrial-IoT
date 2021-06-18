@@ -67,7 +67,6 @@ namespace IIoTPlatform_E2E_Tests.Deploy {
                 _context.ContainerRegistryConfig.ImagesNamespace.TrimEnd('/') + "/";
             var version = _context.ContainerRegistryConfig.ImagesTag ?? "latest";
             var image = $"{server}/{ns}iotedge/opc-publisher:{version}";
-            //var image = $"trumpfdev.azurecr.io/events-and-alarms/iotedge/opc-publisher:{version}";
 
             // Return deployment modules object
             var content = @"
