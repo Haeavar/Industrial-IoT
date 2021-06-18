@@ -51,6 +51,7 @@ namespace IIoTPlatform_E2E_Tests.Deploy {
                 Cmd = new[] {
                 "PkiRootPath=" + TestConstants.PublishedNodesFolder + "/pki",
                 "--aa",
+                "--mm=PubSub",
                 "--pf=" + TestConstants.PublishedNodesFullName
             },
                 HostConfig = new {
@@ -66,6 +67,7 @@ namespace IIoTPlatform_E2E_Tests.Deploy {
                 _context.ContainerRegistryConfig.ImagesNamespace.TrimEnd('/') + "/";
             var version = _context.ContainerRegistryConfig.ImagesTag ?? "latest";
             var image = $"{server}/{ns}iotedge/opc-publisher:{version}";
+            //var image = $"trumpfdev.azurecr.io/events-and-alarms/iotedge/opc-publisher:{version}";
 
             // Return deployment modules object
             var content = @"
@@ -88,6 +90,7 @@ namespace IIoTPlatform_E2E_Tests.Deploy {
                     ""properties.desired.routes.leafToUpstream"": ""FROM /messages/* WHERE NOT IS_DEFINED($connectionModuleId) INTO $upstream""
                 }
             }";
+
             return JsonConvert.DeserializeObject<IDictionary<string, IDictionary<string, object>>>(content);
         }
 
